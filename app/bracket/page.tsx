@@ -60,7 +60,8 @@ export default async function PublicBracketPage() {
             teamB: m.teamB ? { id: m.teamB.id, name: m.teamB.name } : null,
             scoreA: m.scoreA,
             scoreB: m.scoreB,
-            isSubmitted: m.isSubmitted
+            isSubmitted: m.isSubmitted,
+            round: m.round
           }))}
           initialTournamentId={firstId}
         />
