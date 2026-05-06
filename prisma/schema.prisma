@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id         String   @id @default(cuid())
+  name       String
+  createdAt  DateTime @default(now())
+
+  matchesAsTeamA Match[]    @relation("MatchTeamA")
+  matchesAsTeamB Match[]    @relation("MatchTeamB")
+  standings      Standing[]
+}
+
+enum TournamentType {
+  LEAGUE
+  CUP
+}
+
+model Tournament {
+  id        String         @id @default(cuid())
+  name      String
+  type      TournamentType
+  createdAt DateTime       @default(now())
+
+  matches   Match[]
+  standings Standing[]
+}
+
+model Match {
+  id           String     @id @default(cuid())
+  tournamentId String
+  teamAId      String
+  teamBId      String
+  scoreA       Int?
+  scoreB       Int?
+  matchCode    String     @unique
+  isSubmitted  Boolean    @default(false)
+  round        Int?
+  nextMatchId  String?
+  teamSlot     Int?       // 0 = teamA slot, 1 = teamB slot in next match
+  createdAt    DateTime   @default(now())
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teamA      Team       @relation("MatchTeamA", fields: [teamAId], references: [id])
+  teamB      Team       @relation("MatchTeamB", fields: [teamBId], references: [id])
+  nextMatch  Match?     @relation("BracketNext", fields: [nextMatchId], references: [id])
+  prevMatches Match[]   @relation("BracketNext")
+}
+
+model Standing {
+  id            String   @id @default(cuid())
+  teamId        String
+  tournamentId  String
+  played        Int      @default(0)
+  win           Int      @default(0)
+  draw          Int      @default(0)
+  lose          Int      @default(0)
+  goalsFor      Int      @default(0)
+  goalsAgainst  Int      @default(0)
+  points        Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  team       Team       @relation(fields: [teamId], references: [id])
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, tournamentId])
+}
