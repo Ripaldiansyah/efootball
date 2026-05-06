@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import MatchesClient from "@/app/admin/matches/MatchesClient";
 import type { Metadata } from "next";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import StandingsClient from "@/app/admin/standings/StandingsClient";
 import type { Metadata } from "next";

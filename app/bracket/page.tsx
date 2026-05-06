@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import BracketClient from "@/app/admin/bracket/BracketClient";
 import type { Metadata } from "next";
