@@ -5,7 +5,6 @@ import MatchesClient from "@/app/admin/matches/MatchesClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Public Matches" };
-export const dynamic = "force-dynamic";
 
 export default async function PublicMatchesPage() {
   const [matches, tournaments] = await Promise.all([
