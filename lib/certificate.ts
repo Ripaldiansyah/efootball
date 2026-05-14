@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium-min";
 
 export interface CertificateData {
   teamName: string;
@@ -331,34 +330,26 @@ function getCertificateHTML(data: CertificateData): string {
 `;
 }
 
-const CHROMIUM_URL =
-  "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar";
-
 export async function generateCertificatePDF(
   data: CertificateData
 ): Promise<Buffer> {
   const isProduction = process.env.VERCEL === "1";
 
-  let executablePath: string | undefined;
-  let args: string[] = ["--no-sandbox", "--disable-setuid-sandbox"];
-
-  if (isProduction) {
-    // Dynamic import agar tidak di-bundle Next.js
-    const chromium = await import("@sparticuz/chromium-min");
-    executablePath = await chromium.default.executablePath(CHROMIUM_URL);
-    args = chromium.default.args;
-  }
-
-  const browser = await puppeteer.launch({
-    headless: true,
-    args,
-    executablePath,
-  });
+  const browser = isProduction
+    ? await puppeteer.connect({
+        browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+      })
+    : await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
 
   try {
     const page = await browser.newPage();
     await page.setViewport({ width: 1123, height: 794, deviceScaleFactor: 2 });
-    await page.setContent(getCertificateHTML(data), { waitUntil: "networkidle0" });
+    await page.setContent(getCertificateHTML(data), {
+      waitUntil: "networkidle0",
+    });
 
     const pdfBuffer = await page.pdf({
       width: "1123px",
