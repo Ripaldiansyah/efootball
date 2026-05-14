@@ -43,7 +43,7 @@ export default function StandingsTable({ standings, tournamentId }: StandingsTab
           {standings.map((row, i) => {
             const gd = row.goalsFor - row.goalsAgainst;
             const isTop = i < 3;
-      const totalTeams = row.length;
+      const totalTeams = standings.length;
             const rankColor =
               i === 0 ? "var(--accent-orange)" : i === 1 ? "var(--text-secondary)" : i === 2 ? "#cd7f32" : "var(--text-muted)";
             const rowGlow = isTop ? `rgba(${i===0?'245,158,11':i===1?'148,163,184':'205,127,50'}, 0.05)` : "rgba(255,255,255,0.02)";
