@@ -95,7 +95,17 @@ export default function StandingsTable({ standings, tournamentId }: StandingsTab
                     </div>
                     {tournamentId && (
                       <a
-                        href={`/api/certificate?teamId=${row.teamId}&tournamentId=${tournamentId}&achievement=${i === 0 ? "Champion" : i === 1 ? "Runner Up" : i === 2 ? "3rd Place" : "Participant"}`}
+                        href={`/api/certificate?teamId=${row.teamId}&tournamentId=${tournamentId}&achievement=${
+  i === 0
+    ? "Champion"
+    : i === 1
+    ? "Runner Up"
+    : i === 2
+    ? "3rd Place"
+    : i >= totalTeams - 3
+    ? "Noob Player"
+    : "Participant"
+}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-ghost"
