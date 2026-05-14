@@ -336,6 +336,9 @@ export async function generateCertificatePDF(
 ): Promise<Buffer> {
   const isProduction = process.env.VERCEL === "1";
 
+  const CHROMIUM_URL =
+    "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar";
+
   const browser = await puppeteer.launch({
     headless: true,
 
@@ -344,7 +347,7 @@ export async function generateCertificatePDF(
       : ["--no-sandbox", "--disable-setuid-sandbox"],
 
     executablePath: isProduction
-      ? await chromium.executablePath()
+      ? await chromium.executablePath(CHROMIUM_URL) // ← tambah URL di sini
       : undefined,
   });
 
