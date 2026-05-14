@@ -331,38 +331,34 @@ function getCertificateHTML(data: CertificateData): string {
 `;
 }
 
+const CHROMIUM_URL =
+  "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar";
+
 export async function generateCertificatePDF(
   data: CertificateData
 ): Promise<Buffer> {
   const isProduction = process.env.VERCEL === "1";
 
-  const CHROMIUM_URL =
-    "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar";
+  let executablePath: string | undefined;
+  let args: string[] = ["--no-sandbox", "--disable-setuid-sandbox"];
+
+  if (isProduction) {
+    // Dynamic import agar tidak di-bundle Next.js
+    const chromium = await import("@sparticuz/chromium-min");
+    executablePath = await chromium.default.executablePath(CHROMIUM_URL);
+    args = chromium.default.args;
+  }
 
   const browser = await puppeteer.launch({
     headless: true,
-
-    args: isProduction
-      ? chromium.args
-      : ["--no-sandbox", "--disable-setuid-sandbox"],
-
-    executablePath: isProduction
-      ? await chromium.executablePath(CHROMIUM_URL) // ← tambah URL di sini
-      : undefined,
+    args,
+    executablePath,
   });
 
   try {
     const page = await browser.newPage();
-
-    await page.setViewport({
-      width: 1123,
-      height: 794,
-      deviceScaleFactor: 2,
-    });
-
-    await page.setContent(getCertificateHTML(data), {
-      waitUntil: "networkidle0",
-    });
+    await page.setViewport({ width: 1123, height: 794, deviceScaleFactor: 2 });
+    await page.setContent(getCertificateHTML(data), { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
       width: "1123px",
