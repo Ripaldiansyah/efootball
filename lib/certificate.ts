@@ -1,23 +1,5 @@
 import puppeteer from "puppeteer-core";
-import { execSync } from "child_process";
-import { existsSync } from "fs";
-
-function findChrome(): string {
-  const paths = [
-    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-    "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
-    process.env.CHROME_PATH ?? "",
-  ].filter(Boolean);
-
-  for (const p of paths) {
-    try {
-      execSync(`if exist "${p}" echo found`, { stdio: "pipe" });
-      if (existsSync(p)) return p;
-    } catch {}
-  }
-  return paths[0]; // fallback
-}
+import chromium from "@sparticuz/chromium";
 
 export interface CertificateData {
   teamName: string;
@@ -27,21 +9,29 @@ export interface CertificateData {
 }
 
 function getCertificateHTML(data: CertificateData): string {
-  const date = data.date ?? new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const date =
+    data.date ??
+    new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
-  return `<!DOCTYPE html>
+  return `
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap');
-  
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   body {
     width: 1123px;
     height: 794px;
@@ -57,14 +47,20 @@ function getCertificateHTML(data: CertificateData): string {
     width: 1050px;
     height: 730px;
     position: relative;
+
     border: 3px solid transparent;
-    background: linear-gradient(135deg, #1a1a2e, #16213e) padding-box,
-                linear-gradient(135deg, #f4c20d, #ff6b35, #7b2d8b, #1e90ff) border-box;
+
+    background:
+      linear-gradient(135deg, #1a1a2e, #16213e) padding-box,
+      linear-gradient(135deg, #f4c20d, #ff6b35, #7b2d8b, #1e90ff) border-box;
+
     border-radius: 20px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     padding: 40px;
     overflow: hidden;
   }
@@ -75,24 +71,75 @@ function getCertificateHTML(data: CertificateData): string {
     filter: blur(80px);
     opacity: 0.15;
   }
-  .orb1 { width: 400px; height: 400px; background: #f4c20d; top: -100px; right: -100px; }
-  .orb2 { width: 300px; height: 300px; background: #7b2d8b; bottom: -80px; left: -80px; }
-  .orb3 { width: 250px; height: 250px; background: #1e90ff; bottom: 50px; right: 100px; }
 
-  .corner { position: absolute; width: 60px; height: 60px; }
-  .corner-tl { top: 20px; left: 20px; border-top: 3px solid #f4c20d; border-left: 3px solid #f4c20d; }
-  .corner-tr { top: 20px; right: 20px; border-top: 3px solid #f4c20d; border-right: 3px solid #f4c20d; }
-  .corner-bl { bottom: 20px; left: 20px; border-bottom: 3px solid #f4c20d; border-left: 3px solid #f4c20d; }
-  .corner-br { bottom: 20px; right: 20px; border-bottom: 3px solid #f4c20d; border-right: 3px solid #f4c20d; }
+  .orb1 {
+    width: 400px;
+    height: 400px;
+    background: #f4c20d;
+    top: -100px;
+    right: -100px;
+  }
+
+  .orb2 {
+    width: 300px;
+    height: 300px;
+    background: #7b2d8b;
+    bottom: -80px;
+    left: -80px;
+  }
+
+  .orb3 {
+    width: 250px;
+    height: 250px;
+    background: #1e90ff;
+    bottom: 50px;
+    right: 100px;
+  }
+
+  .corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+  }
+
+  .corner-tl {
+    top: 20px;
+    left: 20px;
+    border-top: 3px solid #f4c20d;
+    border-left: 3px solid #f4c20d;
+  }
+
+  .corner-tr {
+    top: 20px;
+    right: 20px;
+    border-top: 3px solid #f4c20d;
+    border-right: 3px solid #f4c20d;
+  }
+
+  .corner-bl {
+    bottom: 20px;
+    left: 20px;
+    border-bottom: 3px solid #f4c20d;
+    border-left: 3px solid #f4c20d;
+  }
+
+  .corner-br {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 3px solid #f4c20d;
+    border-right: 3px solid #f4c20d;
+  }
 
   .badge {
     background: linear-gradient(135deg, #f4c20d, #ff6b35);
     border-radius: 50px;
     padding: 6px 24px;
     margin-bottom: 16px;
+
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 4px;
+
     color: #0a0a1a;
     text-transform: uppercase;
   }
@@ -115,11 +162,14 @@ function getCertificateHTML(data: CertificateData): string {
     font-family: 'Cinzel', serif;
     font-size: 48px;
     font-weight: 900;
+
     color: #ffffff;
     text-align: center;
     letter-spacing: 2px;
     line-height: 1.1;
+
     margin-bottom: 4px;
+
     background: linear-gradient(135deg, #ffffff, #e0d0ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -136,7 +186,14 @@ function getCertificateHTML(data: CertificateData): string {
   .divider {
     width: 300px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #f4c20d, transparent);
+
+    background: linear-gradient(
+      90deg,
+      transparent,
+      #f4c20d,
+      transparent
+    );
+
     margin: 16px auto;
   }
 
@@ -152,9 +209,11 @@ function getCertificateHTML(data: CertificateData): string {
     font-family: 'Cinzel', serif;
     font-size: 42px;
     font-weight: 700;
+
     background: linear-gradient(135deg, #f4c20d, #ff6b35);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
     text-align: center;
     margin-bottom: 6px;
   }
@@ -184,22 +243,24 @@ function getCertificateHTML(data: CertificateData): string {
     justify-content: center;
   }
 
-  .footer-date {
-    font-size: 12px;
-    color: #6060808;
-    letter-spacing: 2px;
-    color: #7070908;
-  }
-
   .seal {
     width: 60px;
     height: 60px;
+
     border: 2px solid #f4c20d;
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 24px;
+  }
+
+  .footer-date {
+    color: #707090;
+    font-size: 12px;
+    letter-spacing: 2px;
   }
 
   .stars {
@@ -210,58 +271,92 @@ function getCertificateHTML(data: CertificateData): string {
   }
 </style>
 </head>
+
 <body>
 <div class="certificate">
+
   <div class="bg-orb orb1"></div>
   <div class="bg-orb orb2"></div>
   <div class="bg-orb orb3"></div>
-  
+
   <div class="corner corner-tl"></div>
   <div class="corner corner-tr"></div>
   <div class="corner corner-bl"></div>
   <div class="corner corner-br"></div>
 
   <div class="badge">eFootball Tournament</div>
-  
+
   <div class="trophy">🏆</div>
-  
+
   <div class="cert-title">Certificate</div>
-  <div class="cert-subtitle">OF ACHIEVEMENT</div>
-  
+
+  <div class="cert-subtitle">
+    OF ACHIEVEMENT
+  </div>
+
   <div class="divider"></div>
-  
-  <div class="presented-to">This certifies that</div>
-  <div class="team-name">${data.teamName}</div>
-  <div class="achievement-text">${data.achievement}</div>
-  
+
+  <div class="presented-to">
+    This certifies that
+  </div>
+
+  <div class="team-name">
+    ${data.teamName}
+  </div>
+
+  <div class="achievement-text">
+    ${data.achievement}
+  </div>
+
   <div class="stars">★ ★ ★</div>
-  
-  <div class="tournament-name">${data.tournamentName}</div>
-  
+
+  <div class="tournament-name">
+    ${data.tournamentName}
+  </div>
+
   <div class="divider"></div>
-  
+
   <div class="footer-line">
     <div class="seal">⚽</div>
-    <div style="color: #707090; font-size: 12px; letter-spacing: 2px;">${date}</div>
+
+    <div class="footer-date">
+      ${date}
+    </div>
+
     <div class="seal">🎮</div>
   </div>
 </div>
 </body>
-</html>`;
+</html>
+`;
 }
 
 export async function generateCertificatePDF(
   data: CertificateData
 ): Promise<Buffer> {
+  const isProduction = process.env.VERCEL === "1";
+
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: findChrome(),
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+
+    args: isProduction
+      ? chromium.args
+      : ["--no-sandbox", "--disable-setuid-sandbox"],
+
+    executablePath: isProduction
+      ? await chromium.executablePath()
+      : undefined,
   });
 
   try {
     const page = await browser.newPage();
-    await page.setViewport({ width: 1123, height: 794 });
+
+    await page.setViewport({
+      width: 1123,
+      height: 794,
+      deviceScaleFactor: 2,
+    });
+
     await page.setContent(getCertificateHTML(data), {
       waitUntil: "networkidle0",
     });
@@ -270,6 +365,7 @@ export async function generateCertificatePDF(
       width: "1123px",
       height: "794px",
       printBackground: true,
+      preferCSSPageSize: true,
     });
 
     return Buffer.from(pdfBuffer);
