@@ -7,7 +7,7 @@ export interface CertificateData {
   date?: string;
 }
 
-function getCertificateHTML(data: CertificateData): string {
+export function getCertificateHTML(data: CertificateData): string {
   const date =
     data.date ??
     new Date().toLocaleDateString("en-US", {
