@@ -348,7 +348,7 @@ export async function generateCertificatePDF(
     const page = await browser.newPage();
     await page.setViewport({ width: 1123, height: 794, deviceScaleFactor: 2 });
     await page.setContent(getCertificateHTML(data), {
-      waitUntil: "networkidle0",
+      waitUntil: "domcontentloaded",
     });
 
     const pdfBuffer = await page.pdf({
