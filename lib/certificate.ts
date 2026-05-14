@@ -17,14 +17,14 @@ function getCertificateHTML(data: CertificateData): string {
     });
 
   return `
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
+<title>eFootball Certificate</title>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap');
-
   * {
     margin: 0;
     padding: 0;
@@ -34,299 +34,159 @@ function getCertificateHTML(data: CertificateData): string {
   body {
     width: 1123px;
     height: 794px;
-    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 40%, #0d1b2a 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Lato', sans-serif;
-    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    background: #000;
   }
 
   .certificate {
     width: 1050px;
     height: 730px;
     position: relative;
-
-    border: 3px solid transparent;
-
-    background:
-      linear-gradient(135deg, #1a1a2e, #16213e) padding-box,
-      linear-gradient(135deg, #f4c20d, #ff6b35, #7b2d8b, #1e90ff) border-box;
-
+    overflow: hidden;
     border-radius: 20px;
 
+    background:
+      linear-gradient(135deg, rgba(10,10,30,0.85), rgba(30,10,60,0.85)),
+      url("https://images.unsplash.com/photo-1542751371-adc38448a05e") center/cover no-repeat;
+
+    border: 3px solid rgba(255, 215, 0, 0.6);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    color: white;
+    text-align: center;
     padding: 40px;
-    overflow: hidden;
   }
 
-  .bg-orb {
+  .glow {
     position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
-  }
-
-  .orb1 {
     width: 400px;
     height: 400px;
-    background: #f4c20d;
+    background: radial-gradient(circle, rgba(255,215,0,0.25), transparent 70%);
     top: -100px;
     right: -100px;
+    filter: blur(30px);
   }
 
-  .orb2 {
+  .glow2 {
+    position: absolute;
     width: 300px;
     height: 300px;
-    background: #7b2d8b;
+    background: radial-gradient(circle, rgba(0,150,255,0.25), transparent 70%);
     bottom: -80px;
     left: -80px;
-  }
-
-  .orb3 {
-    width: 250px;
-    height: 250px;
-    background: #1e90ff;
-    bottom: 50px;
-    right: 100px;
-  }
-
-  .corner {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-  }
-
-  .corner-tl {
-    top: 20px;
-    left: 20px;
-    border-top: 3px solid #f4c20d;
-    border-left: 3px solid #f4c20d;
-  }
-
-  .corner-tr {
-    top: 20px;
-    right: 20px;
-    border-top: 3px solid #f4c20d;
-    border-right: 3px solid #f4c20d;
-  }
-
-  .corner-bl {
-    bottom: 20px;
-    left: 20px;
-    border-bottom: 3px solid #f4c20d;
-    border-left: 3px solid #f4c20d;
-  }
-
-  .corner-br {
-    bottom: 20px;
-    right: 20px;
-    border-bottom: 3px solid #f4c20d;
-    border-right: 3px solid #f4c20d;
+    filter: blur(30px);
   }
 
   .badge {
-    background: linear-gradient(135deg, #f4c20d, #ff6b35);
-    border-radius: 50px;
-    padding: 6px 24px;
-    margin-bottom: 16px;
-
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 4px;
-
-    color: #0a0a1a;
-    text-transform: uppercase;
-  }
-
-  .trophy {
-    font-size: 64px;
-    margin-bottom: 12px;
-  }
-
-  .cert-title {
-    font-family: 'Cinzel', serif;
     font-size: 14px;
-    letter-spacing: 6px;
-    color: #a0a0c0;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .cert-subtitle {
-    font-family: 'Cinzel', serif;
-    font-size: 48px;
-    font-weight: 900;
-
-    color: #ffffff;
-    text-align: center;
-    letter-spacing: 2px;
-    line-height: 1.1;
-
-    margin-bottom: 4px;
-
-    background: linear-gradient(135deg, #ffffff, #e0d0ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .cert-of {
-    font-family: 'Cinzel', serif;
-    font-size: 16px;
-    color: #8080a0;
     letter-spacing: 4px;
-    margin-bottom: 28px;
-  }
-
-  .divider {
-    width: 300px;
-    height: 1px;
-
-    background: linear-gradient(
-      90deg,
-      transparent,
-      #f4c20d,
-      transparent
-    );
-
-    margin: 16px auto;
-  }
-
-  .presented-to {
-    font-size: 13px;
-    letter-spacing: 3px;
-    color: #8080a0;
-    text-transform: uppercase;
+    color: #ffd700;
     margin-bottom: 10px;
   }
 
-  .team-name {
-    font-family: 'Cinzel', serif;
-    font-size: 42px;
-    font-weight: 700;
+  .trophy {
+    font-size: 60px;
+    margin-bottom: 10px;
+  }
 
-    background: linear-gradient(135deg, #f4c20d, #ff6b35);
+  .title {
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #ffd700, #ff6b35);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
 
-  .achievement-text {
-    font-size: 18px;
-    color: #c0c0e0;
-    letter-spacing: 2px;
-    margin-bottom: 24px;
-    text-align: center;
-  }
-
-  .tournament-name {
-    font-family: 'Cinzel', serif;
+  .subtitle {
     font-size: 16px;
-    color: #9090b0;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-bottom: 28px;
+    color: #ccc;
+    margin-bottom: 30px;
   }
 
-  .footer-line {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    justify-content: center;
+  .name {
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
   }
 
-  .seal {
-    width: 60px;
-    height: 60px;
-
-    border: 2px solid #f4c20d;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 24px;
-  }
-
-  .footer-date {
-    color: #707090;
-    font-size: 12px;
-    letter-spacing: 2px;
-  }
-
-  .stars {
-    color: #f4c20d;
+  .desc {
     font-size: 18px;
-    letter-spacing: 6px;
-    margin-bottom: 8px;
+    color: #ddd;
+    margin-bottom: 20px;
+  }
+
+  .tournament {
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #aaa;
+    margin-bottom: 40px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    font-size: 14px;
+    color: #bbb;
+  }
+
+  .line {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, gold, transparent);
+    margin: 20px 0;
   }
 </style>
 </head>
 
 <body>
+
 <div class="certificate">
 
-  <div class="bg-orb orb1"></div>
-  <div class="bg-orb orb2"></div>
-  <div class="bg-orb orb3"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
 
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
-
-  <div class="badge">eFootball Tournament</div>
-
+  <div class="badge">EFOOTBALL TOURNAMENT</div>
   <div class="trophy">🏆</div>
 
-  <div class="cert-title">Certificate</div>
+  <div class="title">CERTIFICATE</div>
+  <div class="subtitle">OF ACHIEVEMENT</div>
 
-  <div class="cert-subtitle">
-    OF ACHIEVEMENT
-  </div>
+  <div class="line"></div>
 
-  <div class="divider"></div>
+  <div class="desc">This is proudly presented to</div>
 
-  <div class="presented-to">
-    This certifies that
-  </div>
+  <div class="name">${data.teamName}</div>
 
-  <div class="team-name">
-    ${data.teamName}
-  </div>
+  <div class="desc">For outstanding performance as</div>
 
-  <div class="achievement-text">
+  <div class="name" style="font-size:28px;">
     ${data.achievement}
   </div>
 
-  <div class="stars">★ ★ ★</div>
-
-  <div class="tournament-name">
+  <div class="tournament">
     ${data.tournamentName}
   </div>
 
-  <div class="divider"></div>
-
-  <div class="footer-line">
-    <div class="seal">⚽</div>
-
-    <div class="footer-date">
-      ${date}
-    </div>
-
-    <div class="seal">🎮</div>
+  <div class="footer">
+    <div>${date}</div>
+    
   </div>
+
 </div>
+
 </body>
 </html>
+
 `;
 }
 
