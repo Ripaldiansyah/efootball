@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateCertificatePDF } from "@/lib/certificate";
+import { getCertificateHTML } from "@/lib/certificate";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
