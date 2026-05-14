@@ -6,8 +6,19 @@ export interface CertificateData {
   achievement: string;
   date?: string;
 }
+function getBackgroundByAchievement(achievement: string): string {
+  const backgrounds: Record<string, string> = {
+    "Champion": "https://static.republika.co.id/uploads/member/images/news/large_FIF_Ae_World_Cup_2025_c243438c7f_1753310405.jpg",
+    "Runner Up": "https://akcdn.detik.net.id/community/media/visual/2025/12/28/arsenal-1766863987489_169.jpeg?w=900&q=190",
+    "3rd Place": "https://ik.imagekit.io/tvlk/blog/2025/03/shutterstock_2422694417-2.jpg?tr=q-70,c-at_max,w-1000,h-600",
+    "Participant": "https://images.unsplash.com/photo-1542751371-adc38448a05e",
+    "Noob Player": "https://plus.unsplash.com/premium_photo-1664299631876-f143dc691c4d?q=80&w=1297&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  };
 
+  return backgrounds[achievement] ?? backgrounds["Participant"];
+}
 export function getCertificateHTML(data: CertificateData): string {
+  const bgImage = getBackgroundByAchievement(data.achievement);
   const date =
     data.date ??
     new Date().toLocaleDateString("en-US", {
@@ -50,7 +61,7 @@ export function getCertificateHTML(data: CertificateData): string {
 
     background:
       linear-gradient(135deg, rgba(10,10,30,0.85), rgba(30,10,60,0.85)),
-      url("https://images.unsplash.com/photo-1542751371-adc38448a05e") center/cover no-repeat;
+       url("${bgImage}") center/cover no-repeat;
 
     border: 3px solid rgba(255, 215, 0, 0.6);
     display: flex;
